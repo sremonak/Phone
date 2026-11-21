@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="AppTheme.Light" />
+
+    <style name="AppTheme.Light" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/light_bg</item>
+        <item name="android:colorBackground">@color/light_bg</item>
+        <item name="android:textColorPrimary">@color/light_text</item>
+        <item name="android:textColorSecondary">@color/light_text_secondary</item>
+        <item name="android:textColorHint">#9AA1B4</item>
+        <item name="android:statusBarColor">@color/light_statusbar</item>
+        <item name="android:navigationBarColor">@color/light_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:popupMenuStyle">@android:style/Widget.Material.Light.PopupMenu</item>
+        <item name="android:alertDialogTheme">@android:style/Theme.Material.Light.Dialog.Alert</item>
+        <item name="android:editTextStyle">@android:style/Widget.Material.Light.EditText</item>
+        <item name="av_colorSurface">@color/light_surface</item>
+        <item name="av_colorSurface2">@color/light_surface2</item>
+        <item name="av_colorText">@color/light_text</item>
+        <item name="av_colorTextSecondary">@color/light_text_secondary</item>
+        <item name="av_colorPrimary">@color/light_primary</item>
+        <item name="av_colorPrimaryDark">@color/light_primary_dark</item>
+        <item name="av_colorOnPrimary">@color/light_on_primary</item>
+        <item name="av_colorAccent">@color/light_accent</item>
+        <item name="av_colorDanger">@color/light_danger</item>
+        <item name="av_colorWarning">@color/light_warning</item>
+        <item name="av_colorSuccess">@color/light_success</item>
+        <item name="av_colorDivider">@color/light_divider</item>
+        <item name="av_colorRipple">#1F000000</item>
+    </style>
+
+    <style name="AppTheme.Dark" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dark_bg</item>
+        <item name="android:colorBackground">@color/dark_bg</item>
+        <item name="android:textColorPrimary">@color/dark_text</item>
+        <item name="android:textColorSecondary">@color/dark_text_secondary</item>
+        <item name="android:textColorHint">#6C7285</item>
+        <item name="android:statusBarColor">@color/dark_statusbar</item>
+        <item name="android:navigationBarColor">@color/dark_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:popupMenuStyle">@android:style/Widget.Material.PopupMenu</item>
+        <item name="android:alertDialogTheme">@android:style/Theme.Material.Dialog.Alert</item>
+        <item name="android:editTextStyle">@android:style/Widget.Material.EditText</item>
+        <item name="av_colorSurface">@color/dark_surface</item>
+        <item name="av_colorSurface2">@color/dark_surface2</item>
+        <item name="av_colorText">@color/dark_text</item>
+        <item name="av_colorTextSecondary">@color/dark_text_secondary</item>
+        <item name="av_colorPrimary">@color/dark_primary</item>
+        <item name="av_colorPrimaryDark">@color/dark_primary_dark</item>
+        <item name="av_colorOnPrimary">@color/dark_on_primary</item>
+        <item name="av_colorAccent">@color/dark_accent</item>
+        <item name="av_colorDanger">@color/dark_danger</item>
+        <item name="av_colorWarning">@color/dark_warning</item>
+        <item name="av_colorSuccess">@color/dark_success</item>
+        <item name="av_colorDivider">@color/dark_divider</item>
+        <item name="av_colorRipple">#33FFFFFF</item>
+    </style>
+</resources>

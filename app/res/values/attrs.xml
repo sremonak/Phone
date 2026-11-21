@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="av_colorSurface" format="color" />
+    <attr name="av_colorSurface2" format="color" />
+    <attr name="av_colorText" format="color" />
+    <attr name="av_colorTextSecondary" format="color" />
+    <attr name="av_colorPrimary" format="color" />
+    <attr name="av_colorPrimaryDark" format="color" />
+    <attr name="av_colorOnPrimary" format="color" />
+    <attr name="av_colorAccent" format="color" />
+    <attr name="av_colorDanger" format="color" />
+    <attr name="av_colorWarning" format="color" />
+    <attr name="av_colorSuccess" format="color" />
+    <attr name="av_colorDivider" format="color" />
+    <attr name="av_colorRipple" format="color" />
+</resources>

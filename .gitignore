@@ -1,0 +1,7 @@
+tools/
+build/
+dist/
+*.apk
+*.flata
+classes.jar
+.DS_Store

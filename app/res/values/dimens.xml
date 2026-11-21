@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_padding">16dp</dimen>
+    <dimen name="card_radius">18dp</dimen>
+    <dimen name="chip_radius">100dp</dimen>
+    <dimen name="item_avatar">44dp</dimen>
+    <dimen name="item_gap">14dp</dimen>
+    <dimen name="section_title">13sp</dimen>
+</resources>

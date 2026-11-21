@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light palette -->
+    <color name="light_bg">#F4F5FA</color>
+    <color name="light_surface">#FFFFFF</color>
+    <color name="light_surface2">#ECEEF6</color>
+    <color name="light_text">#14151C</color>
+    <color name="light_text_secondary">#6C7285</color>
+    <color name="light_divider">#E3E5EE</color>
+    <color name="light_primary">#5B3DF5</color>
+    <color name="light_primary_dark">#4529D8</color>
+    <color name="light_on_primary">#FFFFFF</color>
+    <color name="light_accent">#0EA5A4</color>
+    <color name="light_danger">#E11D48</color>
+    <color name="light_warning">#D97706</color>
+    <color name="light_success">#059669</color>
+    <color name="light_statusbar">#F4F5FA</color>
+
+    <!-- Dark palette -->
+    <color name="dark_bg">#0D0E13</color>
+    <color name="dark_surface">#16171F</color>
+    <color name="dark_surface2">#1F212C</color>
+    <color name="dark_text">#F2F3F8</color>
+    <color name="dark_text_secondary">#9AA1B4</color>
+    <color name="dark_divider">#282B38</color>
+    <color name="dark_primary">#7C5CFF</color>
+    <color name="dark_primary_dark">#6A48F0</color>
+    <color name="dark_on_primary">#FFFFFF</color>
+    <color name="dark_accent">#2DD4BF</color>
+    <color name="dark_danger">#FF5C7A</color>
+    <color name="dark_warning">#FFB454</color>
+    <color name="dark_success">#3DDC97</color>
+    <color name="dark_statusbar">#0D0E13</color>
+
+    <!-- Brand / gradients -->
+    <color name="brand_violet">#7C5CFF</color>
+    <color name="brand_indigo">#4A7BFF</color>
+    <color name="brand_magenta">#C259FF</color>
+    <color name="grad_start">#6D4BFF</color>
+    <color name="grad_mid">#8E5BFF</color>
+    <color name="grad_end">#4A7BFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="ic_launcher_bg">#0D0E13</color>
+
+    <!-- Avatar gradient pool -->
+    <color name="av_1">#6D4BFF</color>
+    <color name="av_2">#0EA5A4</color>
+    <color name="av_3">#F472B6</color>
+    <color name="av_4">#F59E0B</color>
+    <color name="av_5">#3B82F6</color>
+    <color name="av_6">#8B5CF6</color>
+    <color name="av_7">#EF4444</color>
+    <color name="av_8">#10B981</color>
+</resources>
