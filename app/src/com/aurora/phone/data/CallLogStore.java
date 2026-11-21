@@ -33,6 +33,7 @@ public final class CallLogStore {
         }
         List<CallEntry> list = new ArrayList<CallEntry>();
         String[] projection = new String[] {
+                CallLog.Calls._ID,
                 CallLog.Calls.NUMBER,
                 CallLog.Calls.CACHED_NAME,
                 CallLog.Calls.TYPE,
@@ -46,6 +47,7 @@ public final class CallLogStore {
             if (cursor == null) {
                 return list;
             }
+            int idIdx = cursor.getColumnIndex(CallLog.Calls._ID);
             int nIdx = cursor.getColumnIndex(CallLog.Calls.NUMBER);
             int nameIdx = cursor.getColumnIndex(CallLog.Calls.CACHED_NAME);
             int tIdx = cursor.getColumnIndex(CallLog.Calls.TYPE);
@@ -53,6 +55,7 @@ public final class CallLogStore {
             int durIdx = cursor.getColumnIndex(CallLog.Calls.DURATION);
             while (cursor.moveToNext()) {
                 CallEntry entry = new CallEntry();
+                entry.id = idIdx >= 0 ? cursor.getLong(idIdx) : 0L;
                 entry.number = nIdx >= 0 ? cursor.getString(nIdx) : null;
                 if (entry.number == null) {
                     entry.number = "";
@@ -113,5 +116,73 @@ public final class CallLogStore {
             }
         });
         return list;
+    }
+
+    /** Missed calls with date >= since (for the missed-call notification). */
+    public static int countMissedSince(Context c, long since) {
+        if (!canRead(c)) {
+            return 0;
+        }
+        Cursor cursor = null;
+        try {
+            cursor = c.getContentResolver().query(CallLog.Calls.CONTENT_URI,
+                    new String[] { "COUNT(*)" },
+                    CallLog.Calls.TYPE + "=? AND " + CallLog.Calls.DATE + ">=?",
+                    new String[] { String.valueOf(3), String.valueOf(since) },
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                return cursor.getInt(0);
+            }
+        } catch (RuntimeException ignored) {
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return 0;
+    }
+
+    /** Deletes every call-log row for the given number (needs WRITE_CALL_LOG). */
+    public static boolean deleteNumber(Context c, String number) {
+        if (!canWrite(c)) {
+            return false;
+        }
+        String key = NumberGeo.groupKey(number);
+        List<CallEntry> raw = loadRaw(c);
+        if (raw == null) {
+            return false;
+        }
+        int deleted = 0;
+        for (int i = 0; i < raw.size(); i++) {
+            CallEntry entry = raw.get(i);
+            if (entry.id > 0 && NumberGeo.groupKey(entry.number).equals(key)) {
+                try {
+                    deleted += c.getContentResolver().delete(CallLog.Calls.CONTENT_URI,
+                            CallLog.Calls._ID + "=?",
+                            new String[] { String.valueOf(entry.id) });
+                } catch (SecurityException ex) {
+                    return false;
+                }
+            }
+        }
+        return deleted > 0;
+    }
+
+    /** Clears the entire call log (needs WRITE_CALL_LOG). */
+    public static boolean clearAll(Context c) {
+        if (!canWrite(c)) {
+            return false;
+        }
+        try {
+            c.getContentResolver().delete(CallLog.Calls.CONTENT_URI, null, null);
+            return true;
+        } catch (SecurityException ex) {
+            return false;
+        }
+    }
+
+    private static boolean canWrite(Context c) {
+        return c.checkSelfPermission(Manifest.permission.WRITE_CALL_LOG)
+                == android.content.pm.PackageManager.PERMISSION_GRANTED;
     }
 }

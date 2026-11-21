@@ -2,6 +2,7 @@ package com.aurora.phone;
 
 /** One call-log record. */
 public class CallEntry {
+    public long id = 0L;
     /** Mirrors CallLog.Calls type values (present as literals for stub-jar safety). */
     public static final int TYPE_INCOMING = 1;
     public static final int TYPE_OUTGOING = 2;

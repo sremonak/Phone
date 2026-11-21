@@ -1,4 +1,4 @@
-# Aurora Phone — Premium Dialer & Caller ID
+# Aurora Phone — v1.1 (Express) — Premium Dialer & Caller ID
 
 A modern, professional Android calling app with **detailed caller information**,
 built without Gradle. Single APK, ~137 KB, zero runtime dependencies.

@@ -214,6 +214,112 @@
                 android:textColor="?attr/av_colorTextSecondary" />
 
             <LinearLayout
+
+                android:id="@+id/noteCard"
+
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="14dp"
+
+                android:orientation="vertical"
+
+                android:background="@drawable/bg_card"
+
+                android:padding="16dp">
+
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+
+                    android:orientation="horizontal"
+
+                    android:gravity="center_vertical">
+
+
+                    <ImageView
+
+                        android:layout_width="18dp"
+
+                        android:layout_height="18dp"
+
+                        android:src="@drawable/ic_edit"
+
+                        android:tint="?attr/av_colorPrimary"
+
+                        android:contentDescription="@null" />
+
+
+                    <TextView
+
+                        android:layout_width="0dp"
+
+                        android:layout_height="wrap_content"
+
+                        android:layout_weight="1"
+
+                        android:layout_marginStart="10dp"
+
+                        android:text="@string/note_title"
+
+                        android:textSize="14sp"
+
+                        android:textStyle="bold"
+
+                        android:fontFamily="sans-serif-medium"
+
+                        android:textColor="?attr/av_colorText" />
+
+
+                    <TextView
+
+                        android:id="@+id/btnEditNote"
+
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
+
+                        android:padding="6dp"
+
+                        android:text="@string/add_note"
+
+                        android:textSize="13sp"
+
+                        android:textStyle="bold"
+
+                        android:textColor="?attr/av_colorPrimary" />
+
+                </LinearLayout>
+
+
+                <TextView
+
+                    android:id="@+id/noteText"
+
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="8dp"
+
+                    android:text="@string/note_empty"
+
+                    android:textSize="14sp"
+
+                    android:lineSpacingExtra="2dp"
+
+                    android:textColor="?attr/av_colorTextSecondary" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/infoCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

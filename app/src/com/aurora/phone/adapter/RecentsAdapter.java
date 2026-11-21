@@ -29,6 +29,7 @@ public class RecentsAdapter extends BaseAdapter {
     public interface Listener {
         void onRecentClick(RecentItem item, View anchor);
         boolean onRecentLongClick(RecentItem item, View anchor);
+        void onRecentDelete(RecentItem item);
     }
 
     private final LayoutInflater inflater;
@@ -38,7 +39,22 @@ public class RecentsAdapter extends BaseAdapter {
     private Map<String, ContactEntry> contactIndex;
     private String query = "";
     private boolean hideSpam = false;
+    private int chipFilter = 0;
     private Listener listener;
+
+    public static final int CHIP_ALL = 0;
+    public static final int CHIP_MISSED = 1;
+    public static final int CHIP_CONTACTS = 2;
+    public static final int CHIP_SPAM = 3;
+
+    public void setChipFilter(int chip) {
+        this.chipFilter = chip;
+        applyFilter(query);
+    }
+
+    public List<RecentItem> allItems() {
+        return all;
+    }
 
     public RecentsAdapter(Context context) {
         this.context = context;
@@ -65,30 +81,47 @@ public class RecentsAdapter extends BaseAdapter {
     public void applyFilter(String q) {
         this.query = q == null ? "" : q.trim().toLowerCase(Locale.getDefault());
         visible.clear();
-        if (query.length() == 0) {
-            for (int i = 0; i < all.size(); i++) {
-                RecentItem item = all.get(i);
-                if (hideSpam && spammy(item)) {
-                    continue;
-                }
-                visible.add(item);
+        String digits = query.length() > 0 ? NumberGeo.digits(query) : "";
+        for (int i = 0; i < all.size(); i++) {
+            RecentItem item = all.get(i);
+            if (hideSpam && spammy(item)) {
+                continue;
             }
-        } else {
-            String digits = NumberGeo.digits(query);
-            for (int i = 0; i < all.size(); i++) {
-                RecentItem item = all.get(i);
-                if (hideSpam && spammy(item)) {
-                    continue;
-                }
+            if (!passesChip(item)) {
+                continue;
+            }
+            if (query.length() > 0) {
                 String name = displayName(item).toLowerCase(Locale.getDefault());
                 String number = item.number.toLowerCase(Locale.getDefault());
-                if (name.contains(query) || number.contains(query)
-                        || (digits.length() > 0 && NumberGeo.digits(item.number).contains(digits))) {
-                    visible.add(item);
+                boolean match = name.contains(query) || number.contains(query)
+                        || (digits.length() > 0 && NumberGeo.digits(item.number).contains(digits));
+                if (!match) {
+                    continue;
                 }
             }
+            visible.add(item);
         }
         notifyDataSetChanged();
+    }
+
+    /** Home-tab filter chips (All / Missed / Contacts / Spam). */
+    private boolean passesChip(RecentItem item) {
+        if (chipFilter == CHIP_MISSED) {
+            return item.missed > 0;
+        }
+        if (chipFilter == CHIP_CONTACTS) {
+            if (item.name != null && item.name.length() > 0) {
+                return true;
+            }
+            if (contactIndex != null) {
+                return contactIndex.get(NumberGeo.groupKey(item.number)) != null;
+            }
+            return false;
+        }
+        if (chipFilter == CHIP_SPAM) {
+            return spammy(item);
+        }
+        return true;
     }
 
     /** Rows hidden while "Block suspected spam" is enabled. */
@@ -193,6 +226,10 @@ public class RecentsAdapter extends BaseAdapter {
         if (where.length() > 0) {
             meta.append(" · ").append(where);
         }
+        String note = com.aurora.phone.Prefs.note(context, item.number);
+        if (note.length() > 0) {
+            meta.append(" · ").append(context.getString(com.aurora.phone.R.string.note_title));
+        }
         holder.meta.setText(meta.toString());
 
         holder.time.setText(TimeUtils.relative(item.date));
@@ -223,7 +260,86 @@ public class RecentsAdapter extends BaseAdapter {
                 return listener != null && listener.onRecentLongClick(item, v);
             }
         });
+        attachSwipe(view, item);
         return view;
+    }
+
+    private float downX;
+    private boolean swiping;
+    private boolean swipeConsumed;
+    private android.graphics.drawable.Drawable rowBackground;
+
+    /** Swipe a row to the left past ~90px to delete it. */
+    private void attachSwipe(final View row, final RecentItem item) {
+        row.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(final View v, android.view.MotionEvent event) {
+                float density = context.getResources().getDisplayMetrics().density;
+                float threshold = 96f * density;
+                switch (event.getActionMasked()) {
+                    case android.view.MotionEvent.ACTION_DOWN:
+                        downX = event.getX();
+                        swiping = false;
+                        swipeConsumed = false;
+                        rowBackground = v.getBackground();
+                        v.setTranslationX(0f);
+                        return false;
+                    case android.view.MotionEvent.ACTION_MOVE: {
+                        float dx = event.getX() - downX;
+                        if (dx < -8f * density) {
+                            swiping = true;
+                            v.getParent().requestDisallowInterceptTouchEvent(true);
+                            v.setTranslationX(Math.max(dx, -threshold - 40f * density));
+                            float progress = Math.min(1f, -dx / threshold);
+                            v.setBackgroundColor(android.graphics.Color.argb(
+                                    (int) (progress * 160), 255, 60, 70));
+                            return true;
+                        }
+                        if (swiping) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    case android.view.MotionEvent.ACTION_UP: {
+                        float dx = event.getX() - downX;
+                        if (swiping && dx < -threshold && !swipeConsumed) {
+                            swipeConsumed = true;
+                            v.animate().translationX(-v.getWidth())
+                                    .alpha(0f).setDuration(180)
+                                    .withEndAction(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            v.setTranslationX(0f);
+                                            v.setAlpha(1f);
+                                            v.setBackground(rowBackground);
+                                            if (listener != null) {
+                                                listener.onRecentDelete(item);
+                                            }
+                                        }
+                                    }).start();
+                            return true;
+                        }
+                        if (rowBackground != null) {
+                            v.setBackground(rowBackground);
+                        }
+                        v.animate().translationX(0f).alpha(1f).setDuration(140).start();
+                        if (swiping) {
+                            // consumed a swipe gesture — swallow the click
+                            return true;
+                        }
+                        return false;
+                    }
+                    case android.view.MotionEvent.ACTION_CANCEL:
+                        if (rowBackground != null) {
+                            v.setBackground(rowBackground);
+                        }
+                        v.animate().translationX(0f).alpha(1f).setDuration(140).start();
+                        return swiping;
+                    default:
+                        return false;
+                }
+            }
+        });
     }
 
     private int color(int attr) {

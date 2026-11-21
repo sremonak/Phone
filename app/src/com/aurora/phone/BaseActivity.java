@@ -12,6 +12,10 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(ThemeHelper.getThemeId(this));
+        int accent = ThemeHelper.getAccentId(this);
+        if (accent != 0) {
+            getTheme().applyStyle(accent, true);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -19,7 +23,7 @@ public abstract class BaseActivity extends Activity {
         return checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED;
     }
 
-    protected void toast(String message) {
+    public void toast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
@@ -31,7 +35,7 @@ public abstract class BaseActivity extends Activity {
         return 0xFF000000;
     }
 
-    protected boolean isUiAlive() {
+    public boolean isUiAlive() {
         return !isFinishing() && !isDestroyed();
     }
 }

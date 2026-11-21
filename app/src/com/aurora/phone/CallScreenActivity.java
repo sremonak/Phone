@@ -99,6 +99,8 @@ public class CallScreenActivity extends BaseActivity {
         String pretty = NumberGeo.pretty(NumberGeo.normalize(number));
         callNumber.setText(pretty);
 
+        startAmbientAnimations();
+
         findViewById(R.id.btnDecline).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -281,5 +283,64 @@ public class CallScreenActivity extends BaseActivity {
             Actions.dial(this, number);
             finish();
         }
+    }
+
+    /** Pulsing rings around the avatar (incoming) + slow drifting aurora orbs. */
+    private void startAmbientAnimations() {
+        View ringOne = findViewById(R.id.pulseRingOne);
+        View ringTwo = findViewById(R.id.pulseRingTwo);
+        View orbOne = findViewById(R.id.orbOne);
+        View orbTwo = findViewById(R.id.orbTwo);
+
+        if (orbOne != null) {
+            orbOne.animate().translationX(-26f).translationY(18f)
+                    .setDuration(4200).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isUiAlive() && findViewById(R.id.orbOne) != null) {
+                                findViewById(R.id.orbOne).animate()
+                                        .translationX(0f).translationY(0f)
+                                        .setDuration(4200).withEndAction(this).start();
+                            }
+                        }
+                    }).start();
+        }
+        if (orbTwo != null) {
+            orbTwo.animate().translationX(22f).translationY(-16f)
+                    .setDuration(5000).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isUiAlive() && findViewById(R.id.orbTwo) != null) {
+                                findViewById(R.id.orbTwo).animate()
+                                        .translationX(0f).translationY(0f)
+                                        .setDuration(5000).withEndAction(this).start();
+                            }
+                        }
+                    }).start();
+        }
+
+        if (mode.equals(MODE_INCOMING) && ringOne != null && ringTwo != null) {
+            pulse(ringOne, 0L, 1600);
+            pulse(ringTwo, 400L, 1600);
+        }
+    }
+
+    private void pulse(final View ring, long startDelay, final long duration) {
+        ring.setScaleX(0.6f);
+        ring.setScaleY(0.6f);
+        ring.setAlpha(0.9f);
+        ring.animate().scaleX(1.35f).scaleY(1.35f).alpha(0f)
+                .setStartDelay(startDelay).setDuration(duration)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isUiAlive() && mode.equals(MODE_INCOMING)) {
+                            ring.setScaleX(0.6f);
+                            ring.setScaleY(0.6f);
+                            ring.setAlpha(0.9f);
+                            pulse(ring, 0L, duration);
+                        }
+                    }
+                }).start();
     }
 }

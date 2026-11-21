@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WRITE_CALL_LOG" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
@@ -29,6 +30,11 @@
         <activity android:name=".DialpadActivity" android:exported="false" />
         <activity android:name=".CallerDetailActivity" android:exported="false" />
         <activity android:name=".CallScreenActivity" android:exported="false" />
+        <activity android:name=".SearchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+        <activity android:name=".InsightsActivity"
+            android:exported="false" />
         <activity android:name=".SettingsActivity" android:exported="false" />
     </application>
 </manifest>

@@ -57,4 +57,36 @@
         <item name="av_colorDivider">@color/dark_divider</item>
         <item name="av_colorRipple">#33FFFFFF</item>
     </style>
+
+    <!-- Accent overlays: applied on top of the day/night theme (v1.1) -->
+    <style name="Accent_Violet">
+        <item name="av_colorPrimary">@color/acc_violet</item>
+        <item name="av_colorPrimaryDark">#6A48F0</item>
+        <item name="android:colorAccent">@color/acc_violet</item>
+    </style>
+    <style name="Accent_Blue">
+        <item name="av_colorPrimary">@color/acc_blue</item>
+        <item name="av_colorPrimaryDark">@color/acc_blue_dark</item>
+        <item name="android:colorAccent">@color/acc_blue</item>
+    </style>
+    <style name="Accent_Teal">
+        <item name="av_colorPrimary">@color/acc_teal</item>
+        <item name="av_colorPrimaryDark">@color/acc_teal_dark</item>
+        <item name="android:colorAccent">@color/acc_teal</item>
+    </style>
+    <style name="Accent_Rose">
+        <item name="av_colorPrimary">@color/acc_rose</item>
+        <item name="av_colorPrimaryDark">@color/acc_rose_dark</item>
+        <item name="android:colorAccent">@color/acc_rose</item>
+    </style>
+    <style name="Accent_Amber">
+        <item name="av_colorPrimary">@color/acc_amber</item>
+        <item name="av_colorPrimaryDark">@color/acc_amber_dark</item>
+        <item name="android:colorAccent">@color/acc_amber</item>
+    </style>
+    <style name="Accent_Green">
+        <item name="av_colorPrimary">@color/acc_green</item>
+        <item name="av_colorPrimaryDark">@color/acc_green_dark</item>
+        <item name="android:colorAccent">@color/acc_green</item>
+    </style>
 </resources>

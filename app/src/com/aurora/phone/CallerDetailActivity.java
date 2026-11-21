@@ -1,7 +1,10 @@
 package com.aurora.phone;
 
 import android.content.Intent;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.EditText;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -49,6 +52,8 @@ public class CallerDetailActivity extends BaseActivity {
     private LinearLayout historyCard;
     private TextView historyEmpty;
     private TextView blockLabel;
+    private TextView noteText;
+    private TextView btnEditNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,15 @@ public class CallerDetailActivity extends BaseActivity {
         historyCard = (LinearLayout) findViewById(R.id.historyCard);
         historyEmpty = (TextView) findViewById(R.id.historyEmpty);
         blockLabel = (TextView) findViewById(R.id.actionBlockLabel);
+        noteText = (TextView) findViewById(R.id.noteText);
+        btnEditNote = (TextView) findViewById(R.id.btnEditNote);
+        refreshNote();
+        btnEditNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editNote();
+            }
+        });
 
         findViewById(R.id.btnBack).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -442,5 +456,54 @@ public class CallerDetailActivity extends BaseActivity {
             }
         });
         popup.show();
+    }
+
+    private void refreshNote() {
+        String note = Prefs.note(this, number);
+        if (note.length() == 0) {
+            noteText.setText(R.string.note_empty);
+            noteText.setTextColor(colorAttr(R.attr.av_colorTextSecondary));
+            btnEditNote.setText(R.string.add_note);
+        } else {
+            noteText.setText(note);
+            noteText.setTextColor(colorAttr(R.attr.av_colorText));
+            btnEditNote.setText(R.string.edit_note);
+        }
+    }
+
+    private void editNote() {
+        final EditText input = new EditText(this);
+        input.setHint(R.string.note_hint);
+        input.setText(Prefs.note(this, number));
+        input.setMinLines(2);
+        input.setGravity(android.view.Gravity.TOP);
+        input.setInputType(android.text.InputType.TYPE_CLASS_TEXT
+                | android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE);
+        input.setSelection(input.getText().length());
+        android.widget.FrameLayout wrapper = new android.widget.FrameLayout(this);
+        int pad = (int) (20 * getResources().getDisplayMetrics().density);
+        wrapper.setPadding(pad, 0, pad, 0);
+        wrapper.addView(input);
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.note_title)
+                .setView(wrapper)
+                .setPositiveButton(R.string.note_saved, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Prefs.setNote(CallerDetailActivity.this, number,
+                                input.getText().toString());
+                        refreshNote();
+                        toast(getString(R.string.note_saved));
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .setNeutralButton(R.string.clear_all, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Prefs.setNote(CallerDetailActivity.this, number, "");
+                        refreshNote();
+                    }
+                })
+                .show();
     }
 }
