@@ -113,7 +113,8 @@ app/res ── aapt2 compile ──► res.flata
 app/AndroidManifest.xml + res.flata ── aapt2 link ──► base.apk (+ R.java)
 app/src + R.java ── ECJ (Java 6 level) ──► .class files
 .class files ── d8 ──► classes.dex ── zip into APK
-zipalign (scripts/zipalign.py) ──► aligned.apk
+zipalign (scripts/fetch-tools.sh   # idempotent toolchain restore (local + CI)
+scripts/zipalign.py) ──► aligned.apk
 apksigner (v2/v3, keystore/aurora.jks) ──► dist/aurora-phone-v1.0.0.apk
 apksigner verify + aapt2 dump badging ──► sanity check
 ```
@@ -144,6 +145,19 @@ git -C tools/h2apk sparse-checkout set tools
 > Note: the bundled ECJ is 3.6.2, so sources intentionally stick to
 > Java 6 syntax (no diamond operator, no lambdas, no string-switch).
 
+## CI & Releases (GitHub Actions)
+
+- `.github/workflows/release.yml` — on every `v*` tag (or manual dispatch):
+  restores the toolchain, runs `./build.sh`, uploads the APK as a workflow
+  artifact **and attaches it to a GitHub Release** with SHA-256 checksum.
+- `.github/workflows/build.yml` — builds on every branch push / PR so the
+  APK artifact is always available from the Actions tab.
+
+```bash
+# cut a release
+git tag v1.0.1 && git push origin v1.0.1
+```
+
 ## Project layout
 
 ```
@@ -157,6 +171,7 @@ app/
     phone/view/   AvatarView (custom gradient avatar)
     phone/adapter Recents, Contacts, Favorites adapters
 build.sh          end-to-end build
+scripts/fetch-tools.sh   # idempotent toolchain restore (local + CI)
 scripts/zipalign.py
 keystore/aurora.jks   demo signing key (alias `aurora`, storepass `android`)
 ```
